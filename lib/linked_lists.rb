@@ -7,12 +7,6 @@ class LinkedList
   end
 
   def append(value, node = @head)
-    # return add_first(value) if @head == nil
-    # node = @head
-    # until node.next_node == nil
-    #   node = node.next_node
-    # end
-    # node.next_node = create_node(value)
     return (node.next_node = create_node(value)) if node.next_node == nil
 
     append(value, node.next_node)
@@ -23,16 +17,9 @@ class LinkedList
   end
 
   def find(value, node = @head, counter = 0)
-    # node = @head
-    # until node.value == value
-    #   node = node.next_node
-    # end
-    # p node
-
-    # think can recursive this if include (next_node) in param
-    # p node.value
     return counter if node.value == value
     return nil if node.next_node == nil
+
     find(value, node.next_node, counter += 1)
   end
 
@@ -45,46 +32,89 @@ class LinkedList
   end
 
   def size(node = @head, counter = 1)
-  #   counter = 1
-  #   node = @head
-  #   until node.next_node == nil
-  #     node = node.next_node
-  #     counter += 1
-  #   end
-  #   counter
-  # end
   return counter if node.next_node == nil
+
   size(node.next_node, counter += 1)
   end
 
-  def at(index)
+  def at(index, node = @head, counter = 0)
+    return node if counter == index
+    return puts "Index is out of bounds!" if node == nil
+    at(index, node.next_node, counter += 1)
+  end
+
+  def tail
     node = @head
-    counter = 0
-    until counter == index
+    until node.next_node == nil
       node = node.next_node
-      counter += 1
     end
     node
+  end
+
+  def pop
+    self.at(self.size - 2).next_node = nil
   end
 
   def clear
     @head = nil
   end
 
-  # def head
-  #   # node at(index) (0)
-  # end
+  def contains?(value)
+    node = @head
+    until node.next_node == nil
+      return true if node.value == value
+      node = node.next_node
+    end
+    false
+  end
+
+  def to_s
+    node = @head
+    until node.next_node == nil
+      print "( #{node.value} ) -> "
+      node = node.next_node
+    end
+    puts "nil"
+  end
+
+  def insert_at(value, index)
+    if index == 0
+      return @head = create_node(value, @head)
+    elsif self.at(index) == nil
+      return nil
+    else
+      return self.at(index - 1).next_node = create_node(value, self.at(index))
+    end
+  end
+
+  def remove_at(index)
+    if index == 0
+      @head = self.at(index + 1)
+    elsif self.at(index) == nil
+      return nil
+    else
+      self.at(index - 1).next_node = self.at(index + 1)
+    end
+  end
 end
 
 list = LinkedList.new
 
-list.add_first(1)
+list.add_first(rand(100))
 
 5.times do
   list.append(rand(10))
 end
 
-p list
+list.to_s
 
-p list.at(3)
+list.remove_at(5)
+
+list.to_s
+
+
+
+
+
+
 
